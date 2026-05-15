@@ -9,6 +9,8 @@ Rails.application.routes.draw do
       resource :balance, only: [ :show ] do
         resources :adjustments, only: [ :create ], module: :balance
       end
+
+      resources :transfers, only: [ :create ]
     end
   end
 end
