@@ -1,0 +1,41 @@
+name: minimal_finance_api
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  web:
+    build:
+      context: .
+      dockerfile: .devcontainer/Dockerfile
+    command: bin/rails server -b 0.0.0.0
+    volumes:
+      - .:/workspaces/minimal_finance_api:cached
+      - bundle:/usr/local/bundle
+    working_dir: /workspaces/minimal_finance_api
+    ports:
+      - "3000:3000"
+    environment:
+      DB_HOST: db
+      BINDING: 0.0.0.0
+      JWT_SECRET: dev-smoke-test-secret
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres-data:
+  bundle:
