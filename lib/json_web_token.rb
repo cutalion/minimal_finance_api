@@ -20,8 +20,16 @@ module JsonWebToken
     private
 
     def assert_configured!
-      raise NotConfiguredError, "JWT_SECRET is not configured" unless secret.present?
-      raise NotConfiguredError, "JWT_ALGORITHM is not configured" unless algorithm.present?
+      unless secret.present?
+        raise NotConfiguredError,
+              'JsonWebToken.secret is not set. Set it with: JsonWebToken.secret = "some-secret"'
+      end
+
+      unless algorithm.present?
+        raise NotConfiguredError,
+              'JsonWebToken.algorithm is not set. Set it with: JsonWebToken.algorithm = "HS256" ' \
+              '(or "HS384", "HS512", "RS256", etc.)'
+      end
     end
   end
 end
