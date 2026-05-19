@@ -1,4 +1,4 @@
-# Тестовое задание: Финансовое API
+# Test task: Financial API
 
 Minimal Rails 8 API. See [`TASK.md`](TASK.md) for the spec.
 
@@ -24,15 +24,15 @@ docker compose run --rm web bin/rails db:prepare
 # 3. Run the test suite
 docker compose run --rm web bundle exec rspec
 
-# 4. Create Alice and authenticate (set JWT_SECRET in your environment or `.env` first)
+# 4. Start the server (http://localhost:3000)
+docker compose up -d
+
+# 5. Create Alice and authenticate
 curl -X POST http://localhost:3000/api/v1/users \
   -H 'Content-Type: application/json' -d '{"email":"alice@example.com"}'
 curl -X POST http://localhost:3000/api/v1/auth \
   -H 'Content-Type: application/json' -d '{"email":"alice@example.com"}'
 export ALICE_TOKEN=<access_token from the response above>
-
-# 5. Start the server (http://localhost:3000)
-docker compose up -d
 ```
 
 ### Short curl walkthrough
@@ -103,7 +103,7 @@ curl -X POST http://localhost:3000/api/v1/auth \
 `200 OK`
 ```json
 {
-  "access_token": "eyJhbGciOiJIUzI1NiJ9..."
+  "access_token": "eyJhbGciOiJSUzI1NiJ9..."
 }
 ```
 
