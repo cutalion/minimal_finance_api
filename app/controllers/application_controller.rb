@@ -7,26 +7,13 @@ class ApplicationController < ActionController::API
 
   def authenticate_user!
     token = request.headers["Authorization"]&.delete_prefix("Bearer ")
-    return render_invalid_token if token.blank?
+    result = Auth::VerifyToken.call(token: token)
 
-    payload = begin
-      JsonWebToken.decode(token)
-    rescue JWT::ExpiredSignature
-      return render_token_expired
-    rescue JWT::DecodeError
-      return render_invalid_token
+    if result.success?
+      @current_user = result.payload
+    else
+      render_service_failure(result, status: :unauthorized)
     end
-
-    @current_user = User.find_by(id: payload[:sub])
-    render_invalid_token unless @current_user
-  end
-
-  def render_invalid_token
-    render_error(:unauthorized, "invalid_token", "Token is missing or invalid")
-  end
-
-  def render_token_expired
-    render_error(:unauthorized, "token_expired", "Token has expired")
   end
 
   def render_service_failure(result, status: :unprocessable_content)
