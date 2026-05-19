@@ -51,7 +51,7 @@ RSpec.describe "POST /api/v1/auth", type: :request do
     it "rejects an expired token" do
       expired = JsonWebToken.encode(sub: user.id, exp: 1.minute.ago.to_i)
       get "/api/v1/balance", headers: { "Authorization" => "Bearer #{expired}" }
-      expect(response).to have_error_code(:invalid_token).with_status(:unauthorized)
+      expect(response).to have_error_code(:token_expired).with_status(:unauthorized)
     end
 
     it "rejects a token whose subject no longer exists" do

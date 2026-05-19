@@ -11,10 +11,11 @@ class ApplicationController < ActionController::API
 
     payload = begin
       JsonWebToken.decode(token)
+    rescue JWT::ExpiredSignature
+      return render_token_expired
     rescue JWT::DecodeError
-      nil
+      return render_invalid_token
     end
-    return render_invalid_token if payload.nil?
 
     @current_user = User.find_by(id: payload[:sub])
     render_invalid_token unless @current_user
@@ -22,6 +23,10 @@ class ApplicationController < ActionController::API
 
   def render_invalid_token
     render_error(:unauthorized, "invalid_token", "Token is missing or invalid")
+  end
+
+  def render_token_expired
+    render_error(:unauthorized, "token_expired", "Token has expired")
   end
 
   def render_service_failure(result, status: :unprocessable_content)
