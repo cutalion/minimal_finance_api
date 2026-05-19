@@ -12,6 +12,19 @@ Builds the image, prepares the database, boots the server, and exercises every e
 
 `--fresh` wipes the postgres volume first (`docker compose down -v`). Use it to recover from a corrupted volume left by a prior unclean shutdown. Omit it for repeat runs.
 
+## Running locally (without Docker)
+
+Requirements:
+- Ruby 4.0.4 (see `.ruby-version`)
+- PostgreSQL on `localhost` with role `postgres` / password `postgres` (override via `DB_HOST` / `DB_USERNAME` / `DB_PASSWORD`, or set `DATABASE_URL`)
+
+```bash
+bin/setup          # bundle install + db:prepare + start server
+bundle exec rspec  # run tests
+```
+
+`JWT_PRIVATE_KEY` is optional in development — an ephemeral RSA key is generated at boot.
+
 ## Manual testing (Docker Compose)
 
 ```bash
