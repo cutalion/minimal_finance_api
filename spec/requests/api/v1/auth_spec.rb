@@ -42,8 +42,8 @@ RSpec.describe "POST /api/v1/auth", type: :request do
       expect(response).to have_error_code(:invalid_token).with_status(:unauthorized)
     end
 
-    it "rejects a token signed with the wrong secret" do
-      bad = JWT.encode({ sub: user.id }, "wrong-secret", "HS256")
+    it "rejects a token signed with the wrong key" do
+      bad = JWT.encode({ sub: user.id }, OpenSSL::PKey::RSA.generate(2048), "RS256")
       get "/api/v1/balance", headers: { "Authorization" => "Bearer #{bad}" }
       expect(response).to have_error_code(:invalid_token).with_status(:unauthorized)
     end

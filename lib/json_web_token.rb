@@ -30,6 +30,12 @@ module JsonWebToken
               'JsonWebToken.algorithm is not set. Set it with: JsonWebToken.algorithm = "HS256" ' \
               '(or "HS384", "HS512", "RS256", etc.)'
       end
+
+      expected = algorithm.start_with?("HS") ? String : OpenSSL::PKey::PKey
+      unless secret.is_a?(expected)
+        raise NotConfiguredError,
+              "JsonWebToken.secret must be a #{expected} for #{algorithm} (got #{secret.class})"
+      end
     end
   end
 end
