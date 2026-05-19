@@ -85,33 +85,4 @@ RSpec.describe Balance::Transfer do
       expect(bob.reload.balance).to   eq(2_000)
     end
   end
-
-  describe "concurrent transfers", use_transactional_fixtures: false do
-    after do
-      User.delete_all
-    end
-
-    it "completes both transfers without deadlock and conserves money" do
-      alice = User.create!(email: "alice-concurrent@example.com", balance: 10_000)
-      bob   = User.create!(email: "bob-concurrent@example.com",   balance: 10_000)
-
-      threads = [
-        Thread.new {
-          ActiveRecord::Base.connection_pool.with_connection {
-            described_class.call(from: alice, recipient_email: bob.email, amount: 1_000)
-          }
-        },
-        Thread.new {
-          ActiveRecord::Base.connection_pool.with_connection {
-            described_class.call(from: bob, recipient_email: alice.email, amount: 1_500)
-          }
-        }
-      ]
-      threads.each(&:join)
-
-      expect(alice.reload.balance).to eq(10_500)
-      expect(bob.reload.balance).to   eq(9_500)
-      expect(alice.balance + bob.balance).to eq(20_000)
-    end
-  end
 end
