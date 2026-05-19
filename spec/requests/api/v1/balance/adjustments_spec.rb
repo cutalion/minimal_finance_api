@@ -1,7 +1,7 @@
 require "rails_helper"
 
 RSpec.describe "POST /api/v1/balance/adjustments", type: :request do
-  let(:user) { User.create!(email: "alice@example.com") }
+  let(:user) { create(:user) }
 
   it "tops up a balance and returns 201 with the transaction" do
     expect {

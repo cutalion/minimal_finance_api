@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "GET /api/v1/balance", type: :request do
   it "returns 200 with the current user's balance as an integer" do
-    user = User.create!(email: "alice@example.com")
+    user = create(:user)
 
     get "/api/v1/balance", headers: auth_headers(user)
 
@@ -12,7 +12,7 @@ RSpec.describe "GET /api/v1/balance", type: :request do
   end
 
   it "reflects the current balance after it has been set" do
-    user = User.create!(email: "bob@example.com", balance: 12500)
+    user = create(:user, balance: 12500)
 
     get "/api/v1/balance", headers: auth_headers(user)
 

@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Auth::IssueToken do
   describe ".call" do
-    let!(:user) { User.create!(email: "alice@example.com") }
+    let!(:user) { create(:user, email: "alice@example.com") }
 
     it "returns an access token for an existing user" do
       result = described_class.call(email: "alice@example.com")

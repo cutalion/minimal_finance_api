@@ -45,7 +45,7 @@ RSpec.describe Users::Create do
     end
 
     it "fails with email_taken when the email is already registered" do
-      User.create!(email: "alice@example.com")
+      create(:user, email: "alice@example.com")
 
       expect {
         result = described_class.call(email: "alice@example.com")
@@ -56,7 +56,7 @@ RSpec.describe Users::Create do
     end
 
     it "treats email match as case-insensitive for the conflict check" do
-      User.create!(email: "alice@example.com")
+      create(:user, email: "alice@example.com")
 
       expect {
         result = described_class.call(email: "ALICE@example.com")

@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "POST /api/v1/auth", type: :request do
   it "returns 200 with an access token for an existing user" do
-    user = User.create!(email: "alice@example.com")
+    user = create(:user, email: "alice@example.com")
 
     post "/api/v1/auth", params: { email: "alice@example.com" }, as: :json
 
@@ -15,7 +15,7 @@ RSpec.describe "POST /api/v1/auth", type: :request do
   end
 
   it "matches email case-insensitively" do
-    User.create!(email: "alice@example.com")
+    create(:user, email: "alice@example.com")
 
     post "/api/v1/auth", params: { email: "ALICE@example.com" }, as: :json
 
@@ -35,7 +35,7 @@ RSpec.describe "POST /api/v1/auth", type: :request do
   end
 
   describe "JWT validation on authenticated endpoints" do
-    let(:user) { User.create!(email: "alice@example.com") }
+    let(:user) { create(:user) }
 
     it "rejects requests with no Authorization header" do
       get "/api/v1/balance"

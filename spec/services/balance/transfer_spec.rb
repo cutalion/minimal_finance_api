@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe Balance::Transfer do
-  let(:alice) { User.create!(email: "alice@example.com", balance: 10_000) }
-  let(:bob)   { User.create!(email: "bob@example.com",   balance: 2_000) }
+  let(:alice) { create(:user, balance: 10_000) }
+  let(:bob)   { create(:user, balance: 2_000) }
 
   def call(**overrides)
     described_class.call(

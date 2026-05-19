@@ -28,7 +28,7 @@ RSpec.describe "POST /api/v1/users", type: :request do
   end
 
   it "returns 409 email_taken when the email is already registered" do
-    User.create!(email: "alice@example.com")
+    create(:user, email: "alice@example.com")
 
     expect {
       post "/api/v1/users", params: { email: "alice@example.com" }, as: :json
@@ -38,7 +38,7 @@ RSpec.describe "POST /api/v1/users", type: :request do
   end
 
   it "treats email match as case-insensitive for the conflict check" do
-    User.create!(email: "alice@example.com")
+    create(:user, email: "alice@example.com")
 
     expect {
       post "/api/v1/users", params: { email: "ALICE@example.com" }, as: :json

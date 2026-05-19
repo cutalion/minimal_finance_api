@@ -1,8 +1,8 @@
 require "rails_helper"
 
 RSpec.describe "POST /api/v1/transfers", type: :request do
-  let(:alice) { User.create!(email: "alice@example.com", balance: 17_500) }
-  let(:bob)   { User.create!(email: "bob@example.com",   balance: 5_500) }
+  let(:alice) { create(:user, balance: 17_500) }
+  let(:bob)   { create(:user, balance: 5_500) }
 
   it "creates a transfer and moves money between users" do
     expect {
